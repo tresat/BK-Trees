@@ -37,4 +37,15 @@ class BKTreeTest extends Specification {
     nodes[3].word == 'nooks'
     nodes[3].children.size() == 0
   }
+
+  def "test build tree from string"() {
+    given:
+    def words = "Oh say can you see, by the dawn's early light, what so proudly we hailed, by the twilight's last gleaming?"
+
+    when:
+    def tree = new BKTree(words)
+
+    then:
+    tree.getNodes().toString() == ['Oh', 'say', 'can', 'see', 'you', 'what', 'by', 'the', 'the', 'so', 'we', 'by', "dawn's", 'hailed', 'early', 'light', 'last', 'proudly', "twilight's", 'gleaming'].toString()
+  }
 }

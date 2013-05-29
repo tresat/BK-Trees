@@ -30,6 +30,10 @@ class BKTree {
     dictionary[1..-1].each { w -> insertWord(w) }
   }
 
+  BKTree(String text) {
+    this(text.split(/[^(a-zA-Z')]+/).collect())
+  }
+
   void insertWord(String newWord) {
     if (DEBUG) println "Inserting $newWord"
     insertWordRec(root, newWord)
@@ -45,7 +49,6 @@ class BKTree {
     } else {
       if (DEBUG) println "Inserting $newWord under $node.word at $distance"
       node.children[distance] = new BKNode(word:newWord)
-      print()
     }
   }
 
