@@ -3,7 +3,7 @@ package com.tomtresansky.bktree
 
 /**
  * See http://java.dzone.com/articles/algorithm-week-bk-trees-part-1
- *
+ * And http://hamberg.no/erlend/posts/2012-01-17-BK-trees.html
  * @author tom
  */
 class BKTree {
@@ -43,6 +43,11 @@ class BKTree {
     def distance = df.findLevenshteinDistance(node.word, newWord)
     if (DEBUG) println "Distance between $node.word and $newWord is $distance"
 
+    // Exact matches are already present
+    if (0 == distance) {
+      return
+    }
+
     if (node.children.containsKey(distance)) {
       if (DEBUG) println "Following edge $distance (${node.children[distance]})"
       insertWordRec(node.children[distance], newWord)
@@ -69,5 +74,27 @@ class BKTree {
     nodes << node
     node.children.each { c -> getNodesRec(c.value, nodes) }
     return nodes
+  }
+
+  List query(String term, Integer limit) {
+    return queryRec(term, limit, root, [])
+  }
+
+  private List queryRec(String term, Integer limit, BKNode node, List results) {
+    def distance = df.findLevenshteinDistance(node.word, term)
+    if (distance <= limit) {
+      results << node.word
+    }
+
+    def lowerBound = distance - limit
+    def upperBound = distance + limit
+
+    node.children.each { c ->
+      if (c.key >= lowerBound && c.key <= upperBound) {
+        queryRec(term, limit, c.value, results)
+      }
+    }
+
+    return results
   }
 }
