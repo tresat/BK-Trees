@@ -1,5 +1,6 @@
 package com.tomtresansky.bktree
 
+//@Grab(group='org.spockframework', module='spock-core', version='0.7-groovy-2.0')
 import spock.lang.Specification
 
 class LevenshteinDistanceFinderTest extends Specification {

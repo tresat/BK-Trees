@@ -17,8 +17,8 @@ class LevenshteinDistanceFinder {
 
     /* return minimum of delete char from s, delete char from t, and delete char from both */
     return Math.min(findLevenshteinDistanceRec(choppedS, t) + 1,
-        Math.min(findLevenshteinDistanceRec(s, choppedT) + 1,
-            findLevenshteinDistanceRec(choppedS, choppedT) + cost))
+    Math.min(findLevenshteinDistanceRec(s, choppedT) + 1,
+    findLevenshteinDistanceRec(choppedS, choppedT) + cost))
   }
 
   def findLevenshteinDistanceFullIterative(String s, String t) {

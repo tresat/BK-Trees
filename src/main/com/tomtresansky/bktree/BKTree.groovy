@@ -7,6 +7,8 @@ package com.tomtresansky.bktree
  * @author tom
  */
 class BKTree {
+  static def DEBUG = false
+
   BKNode root
   LevenshteinDistanceFinder df = new LevenshteinDistanceFinder()
 
@@ -23,25 +25,25 @@ class BKTree {
   BKTree(List dictionary) {
     assert dictionary.size() >= 1
 
-    println "Creating tree rooted at ${dictionary[0]}"
+    if (DEBUG) println "Creating tree rooted at ${dictionary[0]}"
     root = new BKNode(word:dictionary[0])
     dictionary[1..-1].each { w -> insertWord(w) }
   }
 
   void insertWord(String newWord) {
-    println "Inserting $newWord"
+    if (DEBUG) println "Inserting $newWord"
     insertWordRec(root, newWord)
   }
 
   private void insertWordRec(BKNode node, String newWord) {
     def distance = df.findLevenshteinDistance(node.word, newWord)
-    println "Distance between $node.word and $newWord is $distance"
+    if (DEBUG) println "Distance between $node.word and $newWord is $distance"
 
     if (node.children.containsKey(distance)) {
-      println "Following edge $distance (${node.children[distance]})"
+      if (DEBUG) println "Following edge $distance (${node.children[distance]})"
       insertWordRec(node.children[distance], newWord)
     } else {
-      println "Inserting $newWord under $node.word at $distance"
+      if (DEBUG) println "Inserting $newWord under $node.word at $distance"
       node.children[distance] = new BKNode(word:newWord)
       print()
     }
@@ -56,16 +58,13 @@ class BKTree {
     node.children.each { c -> printRec(c.value) }
   }
 
+  List getNodes() {
+    return getNodesRec(root, [])
+  }
 
-  static main(String... args) {
-    def dictionary = [
-      'book',
-      'rook',
-      'nooks',
-      'boon'
-    ]
-
-    def tree = new BKTree(dictionary)
-    tree.print()
+  private List getNodesRec(BKNode node, List nodes) {
+    nodes << node
+    node.children.each { c -> getNodesRec(c.value, nodes) }
+    return nodes
   }
 }
